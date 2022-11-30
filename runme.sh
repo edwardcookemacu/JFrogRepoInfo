@@ -75,7 +75,7 @@ cd ./demo
 
 ./build-docker.sh -t "test-enduser"
 
-#rm -rf .git
+rm -rf .git
 
 echo "Expecting at least test-buildserver1, test-buildserver2 and test-enduser"
 
