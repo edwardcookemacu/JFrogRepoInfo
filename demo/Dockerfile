@@ -30,16 +30,18 @@ RUN cat /hack/jfrog-configure.sh | bash
 WORKDIR /app
 
 # copy files needed for restore
-COPY ./src/ConsoleApp1.sln ConsoleApp1.sln
-COPY ./src/ConsoleApp1/ConsoleApp1.csproj ConsoleApp1/ConsoleApp1.csproj
-RUN ${dotnetcmd} restore
+COPY ./src/ConsoleApp1.sln ./src/ConsoleApp1.sln
+COPY ./src/ConsoleApp1/ConsoleApp1.csproj ./src/ConsoleApp1/ConsoleApp1.csproj
+
+RUN ${dotnetcmd} restore ./src/ConsoleApp1.sln
 
 # build the binaries
-COPY ./src .
-RUN ${dotnetcmd} build -c Release ConsoleApp1.sln
+COPY . .
+WORKDIR /app/src
+RUN ${dotnetcmd} build -c Release ./ConsoleApp1.sln
 
 # publish
-RUN ${dotnetcmd} publish ConsoleApp1/ConsoleApp1.csproj --no-build -c Release -o /out
+RUN ${dotnetcmd} publish ./ConsoleApp1/ConsoleApp1.csproj --no-build -c Release -o /out
 
 #######
 
@@ -58,10 +60,14 @@ ENV JFROG_CLI_BUILD_PROJECT=${JFROG_CLI_BUILD_PROJECT}
 ENV JFROG_CLI_BUILD_URL=${JFROG_CLI_BUILD_URL}
 ENV CI=${CI}
 
+WORKDIR /app
+RUN cat /hack/jfrog-bag.sh | bash
 RUN jf rt bce ${JFROG_CLI_BUILD_NAME} ${JFROG_CLI_BUILD_NUMBER}
 RUN jf rt bp ${JFROG_CLI_BUILD_NAME} ${JFROG_CLI_BUILD_NUMBER}
-RUN jf audit --licenses
 RUN jf bs ${JFROG_CLI_BUILD_NAME} ${JFROG_CLI_BUILD_NUMBER} --vuln=${JFROG_VULNERABILITIES} --fail=${JFROG_FAIL_BUILD} --extended-table
+
+WORKDIR /app/src
+RUN jf audit --licenses
 
 #######
 

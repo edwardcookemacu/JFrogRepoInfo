@@ -58,7 +58,7 @@ fi
 docker image build -t jfrog --progress=plain ./jfrog-base
 
 pushd
-
+cp -r .git demo
 cd ./demo
 
 ./build-docker.sh -t "test-buildserver1,test-buildserver2" -- \
@@ -75,6 +75,7 @@ cd ./demo
 
 ./build-docker.sh -t "test-enduser"
 
+rm -rf .git
 popd
 
 echo "Expecting at least test-buildserver1, test-buildserver2 and test-enduser"

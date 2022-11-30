@@ -5,7 +5,7 @@ RUN apk add curl bash
 WORKDIR /jfrog
 
 RUN curl -fL https://install-cli.jfrog.io | sh
-COPY hack/mv-jf.sh .
+COPY hack/cp-jf.sh .
 
 RUN cat ./cp-jf.sh | sh
 
