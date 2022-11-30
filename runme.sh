@@ -57,15 +57,15 @@ fi
 
 docker image build -t jfrog --progress=plain ./jfrog-base
 
-pushd
 cp -r .git demo
+
 cd ./demo
 
 ./build-docker.sh -t "test-buildserver1,test-buildserver2" -- \
                     --progress=plain \
-                    --build-arg dotnetcmd='jf dotnet --build-name ${JFROG_CLI_BUILD_NAME} --build-number ${JFROG_CLI_BUILD_NUMBER}' \
+                    --build-arg "dotnetcmd=jf dotnet" \
                     --build-arg JFROG_CLI_BUILD_NAME=${JFROG_BUILD_NAME} \
-                    --build-arg JFROG_CLI_BUILD_NUMBER=$(date +"%4Y.%m.%d-%H.%M.%S") \
+                    --build-arg JFROG_CLI_BUILD_NUMBER=${JFROG_BUILDNUMBER} \
                     --build-arg JFROG_CLI_BUILD_PROJECT=${JFROG_PROJECT} \
                     --build-arg JFROG_URL=${JFROG_URL} \
                     --build-arg JFROG_ENABLED=true \
@@ -75,8 +75,7 @@ cd ./demo
 
 ./build-docker.sh -t "test-enduser"
 
-rm -rf .git
-popd
+#rm -rf .git
 
 echo "Expecting at least test-buildserver1, test-buildserver2 and test-enduser"
 

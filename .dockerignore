@@ -4,3 +4,6 @@ obj
 .dockerignore
 .vs
 Dockerfile
+runme.ps1
+runme.sh
+readme.md
